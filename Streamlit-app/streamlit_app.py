@@ -9,17 +9,50 @@ import pickle
 import requests
 from io import BytesIO
 
+import streamlit as st
+import pickle
+import requests
+import os
+import io
+import logging
+
 @st.cache_resource
 def load_model():
-    # Download the file from cloud storage
-    response = requests.get("https://forproject112.blob.core.windows.net/model-deployment/random_forest_model.pkl")
-    
-    # Load directly from memory
-    model = pickle.loads(response.content)
-    return model
+    try:
+        # Log the attempt to download
+        st.write("Attempting to download model...")
+        
+        # Download the file from cloud storage
+        response = requests.get("https://forproject112.blob.core.windows.net/model-deployment/random_forest_model.pkl", stream=True)
+        response.raise_for_status()  # Check if download was successful
+        
+        # Log download success and response info
+        st.write(f"Download complete. Response status: {response.status_code}")
+        st.write(f"Content type: {response.headers.get('Content-Type')}")
+        
+        # Create a BytesIO object from the content
+        bytes_io = io.BytesIO(response.content)
+        
+        # Attempt to load the model
+        st.write("Loading model from downloaded content...")
+        model = pickle.load(bytes_io)
+        
+        st.write("Model loaded successfully!")
+        return model
+        
+    except Exception as e:
+        st.error(f"Error loading model: {type(e).__name__}: {str(e)}")
+        # Add more detailed logging info
+        st.write(f"Response details (if available): {getattr(response, 'status_code', 'N/A')}")
+        st.write(f"Content length: {len(getattr(response, 'content', b''))}")
+        raise
 
 # Use the model
-model = load_model()
+try:
+    model = load_model()
+    st.success("Model loaded and ready to use!")
+except Exception as e:
+    st.error("Could not load the model. Please check the logs for details.")
 
 # Set page config
 st.set_page_config(
