@@ -1,0 +1,15 @@
+# Ignore environment and cache files
+.env
+__pycache__/
+*.pyc
+venv/
+env/
+
+# Ignore large data files
+*.csv
+*.pkl
+*.h5
+
+# Keep model and data file directories but ignore their contents
+!models/.gitkeep
+!data/.gitkeep
