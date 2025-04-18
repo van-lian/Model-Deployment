@@ -1,5 +1,7 @@
 # Model-Deployment
-A project about hotel booking using machine learning and making a streamlit app from the ML model
+A project about hotel booking using machine learning and making a streamlit app from the ML model.
+
+
 For the Test case in the streamlit app is 
 **Hotel Booking Cancellation Predictor**
 
