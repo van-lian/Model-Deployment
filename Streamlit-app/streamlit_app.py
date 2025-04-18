@@ -5,6 +5,21 @@ from sklearn.ensemble import RandomForestClassifier
 import joblib
 import pickle
 import os
+import pickle
+import requests
+from io import BytesIO
+
+@st.cache_resource
+def load_model():
+    # Download the file from cloud storage
+    response = requests.get("https://forproject112.blob.core.windows.net/model-deployment/random_forest_model.pkl")
+    
+    # Load directly from memory
+    model = pickle.loads(response.content)
+    return model
+
+# Use the model
+model = load_model()
 
 # Set page config
 st.set_page_config(
